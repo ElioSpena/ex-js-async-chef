@@ -9,18 +9,12 @@ Essere asincrona (async).
 Utilizzare await per chiamare le API.
 Restituire una Promise con la data di nascita dello chef.
 Gestire gli errori con try/catch */
-import dayjs from "dayjs";
-
-async function fetchJson(url) {
-  const resp = await fetch(url);
-  const obj = await resp.json();
-  return obj;
-}
 
 async function getChefBirthday(id) {
   let recipe;
   try {
-    recipe = await fetchJson(`https://dummyjson.com/recipes/${id}`);
+    const recipeResp = await fetch(`https://dummyjson.com/recipes/${id}`);
+    recipe = await recipeResp.json();
   } catch (error) {
     console.error(error.message);
   }
@@ -33,7 +27,8 @@ async function getChefBirthday(id) {
 
   let chef;
   try {
-    chef = await fetchJson(`https://dummyjson.com/users/${userId}`);
+    const chefResp = await fetch(`https://dummyjson.com/users/${userId}`);
+    chef = await chefResp.json();
   } catch (error) {
     console.error(error.message);
   }
@@ -47,6 +42,16 @@ async function getChefBirthday(id) {
   return formatDate;
 }
 
-getChefBirthday(1)
+(async () => {
+  try {
+    const birthday = await getChefBirthday(1);
+    console.log("Data di nascita dello chef:", birthday);
+  } catch (error) {
+    console.error(error.message);
+  }
+})();
+
+/* getChefBirthday(1)
   .then((birthday) => console.log("Data di nascita dello chef:", birthday))
   .catch((error) => console.error("Errore:", error.message));
+ */
